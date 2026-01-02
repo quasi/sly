@@ -55,6 +55,7 @@ check-unit: compile
 		--eval "(require 'sly-messages-unit-tests \"test/sly-messages-unit-tests\")" \
 		--eval "(require 'sly-hyperspec-unit-tests \"test/sly-hyperspec-unit-tests\")" \
 		--eval "(require 'sly-common-unit-tests \"test/sly-common-unit-tests\")" \
+		--eval "(require 'sly-xref-unit-tests \"test/sly-xref-unit-tests\")" \
 		--eval "(ert-run-tests-batch-and-exit \"^sly-.*-unit--\")"
 
 # Unit tests with coverage (requires undercover.el)
@@ -72,6 +73,7 @@ check-unit-coverage: compile
 		--eval "(require 'sly-messages-unit-tests \"test/sly-messages-unit-tests\")" \
 		--eval "(require 'sly-hyperspec-unit-tests \"test/sly-hyperspec-unit-tests\")" \
 		--eval "(require 'sly-common-unit-tests \"test/sly-common-unit-tests\")" \
+		--eval "(require 'sly-xref-unit-tests \"test/sly-xref-unit-tests\")" \
 		--eval "(ert-run-tests-batch-and-exit \"^sly-.*-unit--\")"
 	@echo "Coverage report generated in coverage/"
 

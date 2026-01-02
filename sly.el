@@ -3941,7 +3941,9 @@ For insertion in the `compilation-mode' buffer"
   `(:location (:file ,file-name) (:position ,position)
               ,(when hints `(:hints ,hints))))
 
-
+;; NOTE: lib/sly-xref.el provides integration with Emacs's built-in
+;; xref.el framework. The commands below are soft-deprecated but remain
+;; functional for backward compatibility.
 
 (defun sly-edit-definition (&optional name method)
   "Lookup the definition of the name at point.
@@ -3949,7 +3951,9 @@ If there's no name at point, or a prefix argument is given, then
 the function name is prompted. METHOD can be nil, or one of
 `window' or `frame' to specify if the new definition should be
 popped, respectively, in the current window, a new window, or a
-new frame."
+new frame.
+
+This command is soft-deprecated; prefer `xref-find-definitions' (M-.)."
   (interactive (list (or (and (not current-prefix-arg)
                               (sly-symbol-at-point t))
                          (sly-read-symbol-name "Edit Definition of: "))))
@@ -3980,7 +3984,10 @@ new frame."
 ;;; FIXME. TODO: Would be nice to group the symbols (in each
 ;;;              type-group) by their home-package.
 (defun sly-edit-uses (symbol)
-  "Lookup all the uses of SYMBOL."
+  "Lookup all the uses of SYMBOL.
+
+This command is soft-deprecated; prefer `xref-find-references' (M-?)
+or `sly-xref-query' (C-c C-w)."
   (interactive (list (sly-read-symbol-name "Edit Uses of: ")))
   (sly-xref--get-xrefs
    sly-edit-uses-xrefs
@@ -4032,7 +4039,6 @@ FILE-ALIST is an alist of the form ((FILENAME . (XREF ...)) ...)."
   "Like `sly-edit-definition' but switch to the other window."
   (interactive (list (sly-read-symbol-name "Symbol: ")))
   (sly-edit-definition name 'frame))
-
 
 
 ;;;;; first-change-hook
@@ -7502,6 +7508,9 @@ and replace `sly-editing-mode' with `slime-lisp-mode-hook'.")))
  (t
   (warn
    "`sly.el' loaded OK. To use SLY, customize `lisp-mode-hook' and remove `slime-lisp-mode-hook'.")))
+
+;; Load xref.el integration after all core functions are defined
+(require 'sly-xref "lib/sly-xref")
 
 (provide 'sly)
 

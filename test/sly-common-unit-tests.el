@@ -135,7 +135,7 @@
             (should (string-match-p "Before" (buffer-string)))  ; ← outside overlay
             (should (string-match-p "REPLACED" (buffer-string)))  ; ← replacement inserted
             (should (string-match-p "After" (buffer-string)))  ; ← outside overlay
-            (should-not (string-match-p "Middle" (buffer-string)))  ; ← cleared by refresh
+            (should-not (string-match-p "Middle" (buffer-string))))  ; ← cleared by refresh
         (delete-overlay ov)))))
 
 (ert-deftest sly-common-unit--call-refreshing-returns-buffer ()

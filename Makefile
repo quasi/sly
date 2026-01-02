@@ -35,6 +35,57 @@ compile-test: $(TEST_ELCFILES)
 
 # Automated tests
 #
+# Unit tests (no Lisp required)
+UNIT_TEST_FILES := test/sly-parse-unit-tests.el \
+		   test/sly-completion-unit-tests.el \
+		   test/sly-buttons-unit-tests.el \
+		   test/sly-messages-unit-tests.el \
+		   test/sly-hyperspec-unit-tests.el \
+		   test/sly-common-unit-tests.el
+
+check-unit: compile
+	$(EMACS) -Q --batch $(LOAD_PATH) -L test			\
+		--eval "(require 'ert)"					\
+		--eval "(require 'sly)"					\
+		--eval "(require 'sly-unit-tests \"lib/sly-unit-tests\")" \
+		--eval "(require 'sly-test-mocks \"test/sly-test-mocks\")" \
+		--eval "(require 'sly-parse-unit-tests \"test/sly-parse-unit-tests\")" \
+		--eval "(require 'sly-completion-unit-tests \"test/sly-completion-unit-tests\")" \
+		--eval "(require 'sly-buttons-unit-tests \"test/sly-buttons-unit-tests\")" \
+		--eval "(require 'sly-messages-unit-tests \"test/sly-messages-unit-tests\")" \
+		--eval "(require 'sly-hyperspec-unit-tests \"test/sly-hyperspec-unit-tests\")" \
+		--eval "(require 'sly-common-unit-tests \"test/sly-common-unit-tests\")" \
+		--eval "(ert-run-tests-batch-and-exit \"^sly-.*-unit--\")"
+
+# Unit tests with coverage (requires undercover.el)
+check-unit-coverage: compile
+	@mkdir -p coverage
+	$(EMACS) -Q --batch $(LOAD_PATH) -L test			\
+		--eval "(require 'ert)"					\
+		--eval "(require 'sly-test-coverage \"test/sly-test-coverage\")" \
+		--eval "(require 'sly)"					\
+		--eval "(require 'sly-unit-tests \"lib/sly-unit-tests\")" \
+		--eval "(require 'sly-test-mocks \"test/sly-test-mocks\")" \
+		--eval "(require 'sly-parse-unit-tests \"test/sly-parse-unit-tests\")" \
+		--eval "(require 'sly-completion-unit-tests \"test/sly-completion-unit-tests\")" \
+		--eval "(require 'sly-buttons-unit-tests \"test/sly-buttons-unit-tests\")" \
+		--eval "(require 'sly-messages-unit-tests \"test/sly-messages-unit-tests\")" \
+		--eval "(require 'sly-hyperspec-unit-tests \"test/sly-hyperspec-unit-tests\")" \
+		--eval "(require 'sly-common-unit-tests \"test/sly-common-unit-tests\")" \
+		--eval "(ert-run-tests-batch-and-exit \"^sly-.*-unit--\")"
+	@echo "Coverage report generated in coverage/"
+
+# All tests with coverage
+check-coverage: compile compile-contrib
+	@mkdir -p coverage
+	$(EMACS) -Q --batch $(LOAD_PATH) -L test			\
+		--eval "(require 'sly-test-coverage \"test/sly-test-coverage\")" \
+		--eval "(require 'sly-tests \"lib/sly-tests\")"	\
+		--eval "(setq inferior-lisp-program \"$(LISP)\")"	\
+		--eval '(sly-batch-test t)'
+	@echo "Coverage report generated in coverage/"
+
+# Integration tests (require Lisp)
 check: check-core check-fancy
 
 check-core: SELECTOR=t
@@ -97,7 +148,8 @@ Main targets\n\
 all             -- compile all .el files\n\
 compile         -- compile just core SLY\n\
 compile-contrib -- compile just contribs\n\
-check           -- run tests in batch mode\n\
+check           -- run integration tests in batch mode\n\
+check-unit      -- run unit tests (no Lisp required)\n\
 clean           -- delete generated files\n\
 doc-help        -- print help about doc targets\n\
 help-vars       -- print info about variables\n\
@@ -111,4 +163,4 @@ LISP      -- program to start Lisp ($(LISP))\n\
 SELECTOR  -- selector for ERT tests ($(SELECTOR))\n"
 
 .PHONY: all clean compile compile-contrib check check-core \
-	check-fancy dochelp help-vars
+	check-fancy check-unit dochelp help-vars

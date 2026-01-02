@@ -136,7 +136,7 @@
             (should (string-match-p "REPLACED" (buffer-string)))  ; ← replacement inserted
             (should (string-match-p "After" (buffer-string)))  ; ← outside overlay
             (should-not (string-match-p "Middle" (buffer-string))))  ; ← cleared by refresh
-        (delete-overlay ov)))))
+        (delete-overlay ov))))
 
 (ert-deftest sly-common-unit--call-refreshing-returns-buffer ()
   "Test `sly--call-refreshing' returns the buffer."

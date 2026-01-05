@@ -537,10 +537,11 @@ interactive command.\".")
 (defvar sly-mode-map
   (let ((map (make-sparse-keymap)))
     ;; These used to be a `sly-parent-map'
-    (define-key map (kbd "M-.")     'sly-edit-definition)
-    (define-key map (kbd "M-,")     'sly-pop-find-definition-stack)
-    (define-key map (kbd "M-_")     'sly-edit-uses)    ; for German layout
-    (define-key map (kbd "M-?")     'sly-edit-uses)    ; for USian layout
+    ;; Now using xref.el standard bindings (see lib/sly-xref.el)
+    (define-key map (kbd "M-.")     'xref-find-definitions)
+    (define-key map (kbd "M-,")     'xref-go-back)
+    (define-key map (kbd "M-_")     'xref-find-references)    ; for German layout
+    (define-key map (kbd "M-?")     'xref-find-references)    ; for USian layout
     (define-key map (kbd "C-x 4 .") 'sly-edit-definition-other-window)
     (define-key map (kbd "C-x 5 .") 'sly-edit-definition-other-frame)
     (define-key map (kbd "C-x C-e") 'sly-eval-last-expression)
